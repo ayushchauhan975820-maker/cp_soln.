@@ -1,0 +1,1 @@
+{"name":"Local: Main","url":"c:\\Users\\ayush\\Downloads\\CPH\\Main.java","tests":[{"id":1767086046139,"input":"5\n1 1 2 3","output":"4 1 1 0 0"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\ayush\\Downloads\\CPH\\Main.java","group":"local","local":true}
