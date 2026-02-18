@@ -47,3 +47,15 @@ public class C_Reverse_XOR {
         }
     }
 }
+
+/*
+ * fx = reverse of binary rep of no
+ * x xor fx = n
+ * 
+ * for every set bit it must be set in x and unset in fx
+ * 
+ * 1010
+ * 
+ * 11001
+ * 10011
+ */
