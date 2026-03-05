@@ -2,70 +2,60 @@ import static java.lang.Math.*;
 import java.util.*;
 import java.io.*;
 
-public class D_Simons_and_Beating_Peaks {
+public class C_Least_Prefix_Sum {
     static final int mod = (int) 1e9 + 7;
-    public static int n;
-    public static int a[], left[], right[];
 
     public static void main(String[] args) throws Exception {
         FastScanner fs = new FastScanner(System.in);
 
         int t = fs.nextInt();
         while (t-- > 0) {
-            n = fs.nextInt();
-            a = new int[n + 2];
+            int n = fs.nextInt();
+            int m = fs.nextInt();
+            long prefix[] = new long[n + 1];
+            int a[] = new int[n + 1];
             for (int i = 1; i <= n; i++) {
                 a[i] = fs.nextInt();
+                prefix[i] = prefix[i - 1] + a[i];
             }
 
-            left = new int[n + 1];
-            right = new int[n + 1];
-            Stack<Integer> st = new Stack<>();
-
-            for (int i = 1; i <= n; i++) {
-                int lp = 0;
-                while (!st.isEmpty() && a[st.peek()] < a[i]) {
-                    lp = st.pop();
+            PriorityQueue<Integer> low = new PriorityQueue<>((x, y) -> Integer.compare(y, x));
+            PriorityQueue<Integer> high = new PriorityQueue<>();
+            long pre_val = prefix[m];
+            int l = m;
+            int count = 0;
+            while (l > 0) {
+                if (prefix[l] < pre_val) {
+                    // reduce some +ve
+                    int val = low.poll();
+                    pre_val -= 2L * val;
+                    count++;
                 }
-                left[i] = lp;
-                if (!st.isEmpty()) {
-                    right[st.peek()] = i;
-                }
-                st.push(i);
+                low.offer(a[l]);
+                l--;
             }
-            while (st.size() > 1)
-                st.pop();
-            int root = st.pop();
-
-            int depth = dfs(root);
-            System.out.println(n - depth);
+            int r = m + 1;
+            long cur_val = pre_val;
+            while (r <= n) {
+                high.offer(a[r]);
+                cur_val += a[r];
+                if (cur_val < pre_val) {
+                    int val = high.poll();
+                    cur_val -= 2L * val;
+                    count++;
+                }
+                r++;
+            }
+            System.out.println(count);
         }
-    }
-
-    public static int dfs(int idx) {
-        int depth = 0;
-        if (left[idx] != 0) {
-            depth = max(depth, dfs(left[idx]));
-        }
-        if (right[idx] != 0) {
-            depth = max(depth, dfs(right[idx]));
-        }
-        return depth + 1;
     }
 
     /*
-     * so in the end we want no peaks in the array
-     * function is monotonic
+     * if we change the value at an index then it is only going to lower or increase
+     * all the later elements
+     * so it is an invariant for all the later elements wrt m
      * 
-     * if there is a peak we can either remove the left element of the peak or the
-     * right one
      * 
-     * can never remove the highest element in the array so only two cases left
-     * 
-     * in the end the highest element will be at the left or right or both
-     * 
-     *
-     *           ( cartesian tree )
      */
 
     // FastScanner
