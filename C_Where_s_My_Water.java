@@ -20,14 +20,13 @@ public class C_Where_s_My_Water {
             rev[0] = Long.MAX_VALUE;
             rev[n + 1] = Long.MAX_VALUE;
             Stack<Integer> st = new Stack<>();
-            long prefix[] = new long[n + 2];
-            long suffix[] = new long[n + 2];
+            int pre[] = new int[n + 2];
+            int nxt[] = new int[n + 2];
             for (int i = 1; i <= n; i++) {
                 while (!st.isEmpty() && rev[st.peek()] > rev[i]) {
                     st.pop();
                 }
-                int prev = st.isEmpty() ? 0 : st.peek();
-                prefix[i] = prefix[prev] + (long) (i - prev) * rev[i];
+                pre[i] = st.isEmpty() ? 0 : st.peek();
                 st.push(i);
             }
             st.clear();
@@ -35,43 +34,40 @@ public class C_Where_s_My_Water {
                 while (!st.isEmpty() && rev[st.peek()] > rev[i]) {
                     st.pop();
                 }
-                int next = st.isEmpty() ? n + 1 : st.peek();
-                suffix[i] = suffix[next] + (long) (next - i) * rev[i];
+                nxt[i] = st.isEmpty() ? n + 1 : st.peek();
                 st.push(i);
             }
 
-            long[] prefMax = new long[n + 2];
+            long prefix[] = new long[n + 2];
+            prefix[1] = rev[1];
+            for (int i = 2; i <= n; i++) {
+                int prev = pre[i];
+                prefix[i] = prefix[prev] + (long) (i - prev) * rev[i];
+            }
+
+            long suffix[] = new long[n + 2];
+            suffix[n] = rev[n];
+            for (int i = n - 1; i >= 1; i--) {
+                int next = nxt[i];
+                suffix[i] = suffix[next] + (long) (next - i) * rev[i];
+            }
+
+            long min = 0;
             for (int i = 1; i <= n; i++) {
-                long minH = rev[i];
-                long water = prefix[i] - rev[i];
-                for (int k = i; k <= n; k++) {
-                    minH = Math.min(minH, rev[k]);
-                    water += minH;
-                    prefMax[k] = Math.max(prefMax[k], water);
+                long area_cur = prefix[i] + suffix[i] - rev[i];
+                min = max(min, area_cur);
+                int M = i;
+                for (int j = i + 1; j <= n; j++) {
+                    if (rev[j] < rev[M]) {
+                        M = j;
+                    }
+                    long area_second = prefix[j] + suffix[j] - rev[j];
+                    // remove common from i and j
+                    long area_shared = prefix[M] + suffix[M] - rev[M];
+
+                    long area = area_cur + area_second - area_shared;
+                    min = max(min, area);
                 }
-            }
-
-            for (int k = 1; k <= n; k++) {
-                prefMax[k] = Math.max(prefMax[k], prefMax[k - 1]);
-            }
-
-            long[] suffMax = new long[n + 2];
-            for (int i = n; i >= 1; i--) {
-                long minH = rev[i];
-                long water = suffix[i] - rev[i];
-                for (int k = i; k >= 1; k--) {
-                    minH = Math.min(minH, rev[k]);
-                    water += minH;
-                    suffMax[k] = Math.max(suffMax[k], water);
-                }
-            }
-            for (int k = n; k >= 1; k--) {
-                suffMax[k] = Math.max(suffMax[k], suffMax[k + 1]);
-            }
-
-            long min = prefMax[n];
-            for (int k = 1; k < n; k++) {
-                min = Math.max(min, prefMax[k] + suffMax[k + 1]);
             }
 
             System.out.println(min);
