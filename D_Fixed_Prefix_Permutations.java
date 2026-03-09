@@ -5,6 +5,14 @@ import java.io.*;
 public class D_Fixed_Prefix_Permutations {
     static final int mod = (int) 1e9 + 7;
 
+    public static class Trie {
+        Trie[] children;
+
+        public Trie(int m) {
+            this.children = new Trie[m + 1];
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         FastScanner fs = new FastScanner(System.in);
 
@@ -19,27 +27,37 @@ public class D_Fixed_Prefix_Permutations {
                     a[i][j] = fs.nextInt();
                 }
             }
+            Trie root = new Trie(m);
             int b[] = new int[m + 1];
             for (int i = 0; i < n; i++) {
-                StringBuilder sb = new StringBuilder();
                 for (int j = 1; j <= m; j++) {
                     b[a[i][j]] = j;
                 }
+
+                Trie cur = root;
                 for (int j = 1; j <= m; j++) {
-                    sb.append(b[j]);
-                    set.add(sb.toString());
+                    int val = b[j];
+                    if (cur.children[val] == null) {
+                        cur.children[val] = new Trie(m);
+                    }
+                    cur = cur.children[val];
                 }
             }
 
             int ans[] = new int[n];
             for (int i = 0; i < n; i++) {
-                StringBuilder sb = new StringBuilder();
+                Trie cur = root;
+                int depth = 0;
                 for (int j = 1; j <= m; j++) {
-                    sb.append(a[i][j]);
-                    if (set.contains(sb.toString())) {
-                        ans[i] = j;
+                    int val = a[i][j];
+                    if (cur.children[val] != null) {
+                        depth++;
+                        cur = cur.children[val];
+                    } else {
+                        break;
                     }
                 }
+                ans[i] = depth;
             }
 
             for (int i = 0; i < n; i++) {
