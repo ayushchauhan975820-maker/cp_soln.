@@ -1,44 +1,42 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<vector<int>> tree;
-vector<int> dp;
+// void solve() {
+//     long long x, y;
+//     cin >> x >> y;
 
-int dfs(int node)
-{
-    int ct = 0;
-    for (int child : tree[node])
-    {
-        ct += dfs(child) + 1;
-    }
-    return dp[node] = ct;
-}
+//     long long dg = max(x, y);
 
-int main()
-{
+//     long long prev = ((dg - 1) * (dg - 1));
+//     long long cur = (dg * dg);
+
+//     if(dg%2 == 0){
+//         // top -> left
+//         if(y != dg){
+//             cout << cur - y  + 1 << '\n';
+//         } else {
+//             cout << prev + x << '\n';
+//         }
+//     } else {
+//         // left -> top
+//         if(y != dg){
+//             cout << prev + y << '\n';
+//         } else {
+//             cout << cur - x + 1 << '\n';
+//         }
+//     }
+
+//     return;
+// }
+
+int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
     int n;
     cin >> n;
 
-    tree.resize(n + 1);
-    dp.assign(n + 1, 0);
-
-    for (int i = 2; i <= n; i++)
-    {
-        int parent;
-        cin >> parent;
-        tree[parent].push_back(i);
-    }
-
-    dfs(1);
-
-    for (int i = 1; i <= n; i++)
-    {
-        cout << dp[i] << " ";
-    }
-    cout << "\n";
+    // a knight can attack atmost 
 
     return 0;
 }
