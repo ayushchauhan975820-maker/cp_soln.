@@ -20,12 +20,43 @@ public class C_1_A_Simple_GCD_Problem_Easy_Version {
                 b[i] = fs.nextInt();
             }
 
+            int ct = 0;
+            for (int i = 1; i <= n; i++) {
+                if (i != 1 && i != n) {
+                    int gl = gcd(a[i], a[i - 1]);
+                    int gr = gcd(a[i], a[i + 1]);
+                    int g = gcd(gl, gr);
+
+                    if (((long) gl / g) * (long) gr < a[i])
+                        ct++;
+                }
+
+                if (i == 1 && gcd(a[i], a[i + 1]) < a[i])
+                    ct++;
+                if (i == n && gcd(a[i], a[i - 1]) < a[i])
+                    ct++;
+            }
+
+            System.out.println(ct);
         }
     }
 
+    public static int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
     /*
-    
-    */
+     * gcd(al -> ar) = gcd(a'l -> a'r)
+     * 
+     * for a idx i it must maintain the gcd with its left and right
+     * 
+     * 
+     */
 
     // FastScanner
     static class FastScanner {
