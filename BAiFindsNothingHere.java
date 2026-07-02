@@ -2,73 +2,43 @@ import static java.lang.Math.*;
 import java.util.*;
 import java.io.*;
 
-public class AMathDivision {
-    static final int mod = (int) 1e9 + 7;
+public class BAiFindsNothingHere {
+    static final long mod = 998244353;
 
     public static void main(String[] args) throws Exception {
         FastScanner fs = new FastScanner(System.in);
 
         int t = fs.nextInt();
         while (t-- > 0) {
-            int n = fs.nextInt();
+            long n = fs.nextInt();
+            long m = fs.nextLong();
+            long r = fs.nextLong();
+            long c = fs.nextLong();
+
+            long tot = n * m;
+            long sub_tot = (n - r + 1) * (m - c + 1);
+            long dif = tot - sub_tot;
+            long ans = binexp(dif);
+            System.out.println(ans);
         }
     }
 
-    // Disjoint Set Union (Union-Find)
-    static class DSU {
-        int[] parent;
-        int[] size;
-        int components;
-
-        DSU(int n) {
-            parent = new int[n];
-            size = new int[n];
-            components = n;
-            for (int i = 0; i < n; i++) {
-                parent[i] = i;
-                size[i] = 1;
-            }
+    public static long binexp(long val) {
+        long pow = 2;
+        long res = 1;
+        while (val > 0) {
+            if ((val & 1) != 0)
+                res = (res * pow) % mod;
+            val >>= 1;
+            pow = (pow * pow) % mod;
         }
-
-        int find(int x) {
-            if (parent[x] != x)
-                parent[x] = find(parent[x]);
-            return parent[x];
-        }
-
-        boolean union(int a, int b) {
-            int ra = find(a);
-            int rb = find(b);
-            if (ra == rb)
-                return false;
-
-            if (size[ra] < size[rb]) {
-                int t = ra;
-                ra = rb;
-                rb = t;
-            }
-
-            parent[rb] = ra;
-            size[ra] += size[rb];
-            components--;
-            return true;
-        }
-
-        boolean connected(int a, int b) {
-            return find(a) == find(b);
-        }
-
-        int getSize(int x) {
-            return size[find(x)];
-        }
-
-        int count() {
-            return components;
-        }
+        return res;
     }
+
     /*
     
-     */
+    
+    */
 
     // FastScanner
     static class FastScanner {

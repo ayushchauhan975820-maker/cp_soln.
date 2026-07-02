@@ -2,7 +2,7 @@ import static java.lang.Math.*;
 import java.util.*;
 import java.io.*;
 
-public class AMathDivision {
+public class BCrimsonTriples {
     static final int mod = (int) 1e9 + 7;
 
     public static void main(String[] args) throws Exception {
@@ -11,64 +11,19 @@ public class AMathDivision {
         int t = fs.nextInt();
         while (t-- > 0) {
             int n = fs.nextInt();
+            long tot = 0;
+            for (int b = 1; b <= n; b++) {
+                long div = n / b;
+                tot += div * div;
+            }
+            System.out.println(tot);
         }
     }
 
-    // Disjoint Set Union (Union-Find)
-    static class DSU {
-        int[] parent;
-        int[] size;
-        int components;
-
-        DSU(int n) {
-            parent = new int[n];
-            size = new int[n];
-            components = n;
-            for (int i = 0; i < n; i++) {
-                parent[i] = i;
-                size[i] = 1;
-            }
-        }
-
-        int find(int x) {
-            if (parent[x] != x)
-                parent[x] = find(parent[x]);
-            return parent[x];
-        }
-
-        boolean union(int a, int b) {
-            int ra = find(a);
-            int rb = find(b);
-            if (ra == rb)
-                return false;
-
-            if (size[ra] < size[rb]) {
-                int t = ra;
-                ra = rb;
-                rb = t;
-            }
-
-            parent[rb] = ra;
-            size[ra] += size[rb];
-            components--;
-            return true;
-        }
-
-        boolean connected(int a, int b) {
-            return find(a) == find(b);
-        }
-
-        int getSize(int x) {
-            return size[find(x)];
-        }
-
-        int count() {
-            return components;
-        }
-    }
     /*
     
-     */
+    
+    */
 
     // FastScanner
     static class FastScanner {

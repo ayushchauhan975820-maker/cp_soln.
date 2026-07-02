@@ -2,7 +2,7 @@ import static java.lang.Math.*;
 import java.util.*;
 import java.io.*;
 
-public class AMathDivision {
+public class AAnotherPopcountProblem {
     static final int mod = (int) 1e9 + 7;
 
     public static void main(String[] args) throws Exception {
@@ -11,64 +11,50 @@ public class AMathDivision {
         int t = fs.nextInt();
         while (t-- > 0) {
             int n = fs.nextInt();
+            int k = fs.nextInt();
+            int bit[] = new int[32];
+            bit[0] = n;
+            for (int i = 0; i <= 25; i++) {
+                if (bit[i] <= k)
+                    break;
+
+                int mv = 0;
+                if ((bit[i] - k) % 2 == 0) {
+                    mv = bit[i] - k;
+                } else {
+                    mv = bit[i] - k + 1;
+                }
+
+                bit[i] -= mv;
+                bit[i + 1] += mv / 2;
+            }
+
+            long ct = 0;
+            for (int i = 0; i <= 30; i++)
+                ct += (long) bit[i];
+
+            int mx = 0;
+            for (int i = 0; i <= 25; i++) {
+                if (bit[i] != 0)
+                    mx = i;
+            }
+            if (mx != 0) {
+                int dif = 0;
+                for (int i = mx - 1; i >= 0; i--) {
+                    if (bit[i] < k)
+                        dif++;
+                }
+                ct = max(ct, ct - 1 + dif);
+            }
+            System.out.println(ct);
+
         }
     }
 
-    // Disjoint Set Union (Union-Find)
-    static class DSU {
-        int[] parent;
-        int[] size;
-        int components;
-
-        DSU(int n) {
-            parent = new int[n];
-            size = new int[n];
-            components = n;
-            for (int i = 0; i < n; i++) {
-                parent[i] = i;
-                size[i] = 1;
-            }
-        }
-
-        int find(int x) {
-            if (parent[x] != x)
-                parent[x] = find(parent[x]);
-            return parent[x];
-        }
-
-        boolean union(int a, int b) {
-            int ra = find(a);
-            int rb = find(b);
-            if (ra == rb)
-                return false;
-
-            if (size[ra] < size[rb]) {
-                int t = ra;
-                ra = rb;
-                rb = t;
-            }
-
-            parent[rb] = ra;
-            size[ra] += size[rb];
-            components--;
-            return true;
-        }
-
-        boolean connected(int a, int b) {
-            return find(a) == find(b);
-        }
-
-        int getSize(int x) {
-            return size[find(x)];
-        }
-
-        int count() {
-            return components;
-        }
-    }
     /*
     
-     */
+    
+    */
 
     // FastScanner
     static class FastScanner {

@@ -2,8 +2,9 @@ import static java.lang.Math.*;
 import java.util.*;
 import java.io.*;
 
-public class AMathDivision {
+public class CVillageGuilds {
     static final int mod = (int) 1e9 + 7;
+    public static ArrayList<ArrayList<Integer>> list;
 
     public static void main(String[] args) throws Exception {
         FastScanner fs = new FastScanner(System.in);
@@ -11,64 +12,43 @@ public class AMathDivision {
         int t = fs.nextInt();
         while (t-- > 0) {
             int n = fs.nextInt();
+            list = new ArrayList<>();
+            for (int i = 0; i <= n; i++) {
+                list.add(new ArrayList<>());
+            }
+            for (int i = 2; i <= n; i++) {
+                int par = fs.nextInt();
+                list.get(par).add(i);
+            }
+            long ans[] = dfs(1);
+            System.out.println(ans[0]);
         }
     }
 
-    // Disjoint Set Union (Union-Find)
-    static class DSU {
-        int[] parent;
-        int[] size;
-        int components;
-
-        DSU(int n) {
-            parent = new int[n];
-            size = new int[n];
-            components = n;
-            for (int i = 0; i < n; i++) {
-                parent[i] = i;
-                size[i] = 1;
+    public static long[] dfs(int node) {
+        long tot = 1;
+        long max = 0;
+        long smax = 0;
+        for (int child : list.get(node)) {
+            long ch[] = dfs(child);
+            long val = ch[0];
+            long len = ch[1];
+            if (len >= max) {
+                smax = max;
+                max = len;
+            } else if (len > smax) {
+                smax = len;
             }
+            tot += val;
         }
-
-        int find(int x) {
-            if (parent[x] != x)
-                parent[x] = find(parent[x]);
-            return parent[x];
-        }
-
-        boolean union(int a, int b) {
-            int ra = find(a);
-            int rb = find(b);
-            if (ra == rb)
-                return false;
-
-            if (size[ra] < size[rb]) {
-                int t = ra;
-                ra = rb;
-                rb = t;
-            }
-
-            parent[rb] = ra;
-            size[ra] += size[rb];
-            components--;
-            return true;
-        }
-
-        boolean connected(int a, int b) {
-            return find(a) == find(b);
-        }
-
-        int getSize(int x) {
-            return size[find(x)];
-        }
-
-        int count() {
-            return components;
-        }
+        tot += smax;
+        return new long[] { tot, 1 + max(max, smax) };
     }
+
     /*
     
-     */
+    
+    */
 
     // FastScanner
     static class FastScanner {

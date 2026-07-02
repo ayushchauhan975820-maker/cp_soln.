@@ -2,7 +2,7 @@ import static java.lang.Math.*;
 import java.util.*;
 import java.io.*;
 
-public class AMathDivision {
+public class AAnotherPuzzleFromPapyrus {
     static final int mod = (int) 1e9 + 7;
 
     public static void main(String[] args) throws Exception {
@@ -11,64 +11,56 @@ public class AMathDivision {
         int t = fs.nextInt();
         while (t-- > 0) {
             int n = fs.nextInt();
-        }
-    }
-
-    // Disjoint Set Union (Union-Find)
-    static class DSU {
-        int[] parent;
-        int[] size;
-        int components;
-
-        DSU(int n) {
-            parent = new int[n];
-            size = new int[n];
-            components = n;
+            long c = fs.nextLong();
+            long a[] = new long[n];
+            long b[] = new long[n];
             for (int i = 0; i < n; i++) {
-                parent[i] = i;
-                size[i] = 1;
+                a[i] = fs.nextLong();
             }
-        }
-
-        int find(int x) {
-            if (parent[x] != x)
-                parent[x] = find(parent[x]);
-            return parent[x];
-        }
-
-        boolean union(int a, int b) {
-            int ra = find(a);
-            int rb = find(b);
-            if (ra == rb)
-                return false;
-
-            if (size[ra] < size[rb]) {
-                int t = ra;
-                ra = rb;
-                rb = t;
+            for (int i = 0; i < n; i++) {
+                b[i] = fs.nextLong();
             }
 
-            parent[rb] = ra;
-            size[ra] += size[rb];
-            components--;
-            return true;
-        }
+            long cost = Integer.MAX_VALUE;
+            boolean reag_req = false;
+            for (int i = 0; i < n; i++) {
+                if (a[i] < b[i])
+                    reag_req = true;
+            }
 
-        boolean connected(int a, int b) {
-            return find(a) == find(b);
-        }
+            if (!reag_req) {
+                long cst = 0;
+                for (int i = 0; i < n; i++) {
+                    cst += a[i] - b[i];
+                }
+                cost = min(cst, cost);
+            }
 
-        int getSize(int x) {
-            return size[find(x)];
-        }
+            Arrays.sort(a);
+            Arrays.sort(b);
+            boolean pos = true;
+            for (int i = 0; i < n; i++) {
+                if (a[i] < b[i])
+                    pos = false;
+            }
 
-        int count() {
-            return components;
+            if (!pos) {
+                System.out.println(-1);
+                continue;
+            }
+            long srt = c;
+            for (int i = 0; i < n; i++) {
+                srt += a[i] - b[i];
+            }
+            cost = min(cost, srt);
+            System.out.println(cost);
         }
     }
+
     /*
     
-     */
+    
+    */
 
     // FastScanner
     static class FastScanner {
